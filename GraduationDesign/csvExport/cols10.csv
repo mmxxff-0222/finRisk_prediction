@@ -1,0 +1,11 @@
+0,loan_amnt
+1,term
+2,int_rate
+3,installment
+4,grade
+5,emp_length
+6,home_ownership
+7,annual_inc
+8,verification_status
+9,purpose
+10,label
