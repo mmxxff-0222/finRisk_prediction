@@ -2,7 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
-    port: 7777
+    port: 8989
   },
   chainWebpack: config =>{
     config.plugin('html')
