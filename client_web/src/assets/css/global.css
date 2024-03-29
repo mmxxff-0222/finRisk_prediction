@@ -7,3 +7,69 @@ body{
     margin: 0;
     padding: 0;
 }
+.main_container_rr {
+    display: flex;
+    flex-direction: column;
+}
+
+.block1_rr {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.group1_rr {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card1_rr {
+    flex: 2;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card2_rr {
+    flex: 1;
+    margin: 10px;
+}
+
+.card3_rr {
+    flex: 2;
+    display: flex; /* 使用Flexbox布局 */
+    flex-direction: column; /* 垂直方向排列子元素 */
+    margin: 10px;
+}
+#allUserTable_rr{
+    flex: 1;
+}
+
+
+.block2_rr {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.group3_rr {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.card4_rr {
+    flex: 3;
+    margin: 10px;
+}
+
+.card5_rr {
+    flex: 2;
+    margin: 10px;
+}
+
+.card6_rr {
+    flex: 1;
+    margin: 10px;
+}
