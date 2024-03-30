@@ -2,8 +2,13 @@ package com.mengxf.riskreport2.Utils;
 
 
 import com.alibaba.fastjson2.JSONObject;
+import com.mengxf.riskreport2.pojo.BorrowerPojo;
+import com.mengxf.riskreport2.pojo.FinInfoPojo;
+import com.mengxf.riskreport2.pojo.LoanPojo;
+import com.mengxf.riskreport2.pojo.UserPojo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,5 +63,110 @@ public class ApiResponse {
         map.put("data",data);
         String s = JSONObject.toJSONString(map);
         return s;
+    }
+
+    public static String allUsersRespinse(int code, List<UserPojo> data){
+        Map<String, Object> map =new HashMap<>();
+        if (code == Const.SUCCESS){
+            map.put("code",200);
+            map.put("message", "所有用户查询成功！！");
+            map.put("data",data);
+        }else {
+            map.put("code",400);
+            map.put("message", "用户表为空！！");
+            map.put("data","NONE");
+        }
+        return JSONObject.toJSONString(map);
+
+    }
+
+    public static String getLoanResponse(int code, List<LoanPojo> loans) {
+        Map<String,Object> map = new HashMap<>();
+        switch (code){
+            case Const.SUCCESS:
+                map.put("code",200);
+                map.put("msg","成功查询到贷款信息！");
+                map.put("data",loans);
+                return JSONObject.toJSONString(map);
+            case Const.NO_EXIST:
+                map.put("msg","该用户不存在！！");
+                break;
+            case Const.EMPTY:
+                map.put("msg","用户贷款信息为空！！");
+                break;
+            case Const.NOT_NECESSARY:
+                map.put("msg","该用户为管理员，无贷款记录");
+                break;
+            default:
+                map.put("msg","Error!!");
+        }
+        map.put("code",400);
+        map.put("data","NONE");
+        return JSONObject.toJSONString(map);
+    }
+
+    public static String getBorrInfoResponse(int code, BorrowerPojo borrInfo) {
+        Map<String,Object> map = new HashMap<>();
+        switch (code){
+            case Const.SUCCESS:
+                map.put("code",200);
+                map.put("msg","成功查询到借款人信息！");
+                map.put("data",borrInfo);
+                return JSONObject.toJSONString(map);
+            case Const.NO_EXIST:
+                map.put("msg","该用户不存在！！");
+                break;
+            case Const.EMPTY:
+                map.put("msg","用户借款人信息为空！！");
+                break;
+            case Const.NOT_NECESSARY:
+                map.put("msg","该用户为管理员，无借款信息！！");
+                break;
+            default:
+                map.put("msg","Error!!");
+        }
+        map.put("code",400);
+        map.put("data","NONE");
+        return JSONObject.toJSONString(map);
+    }
+
+    public static String getFinInfoResponse(int code, FinInfoPojo finInfo) {
+        Map<String,Object> map = new HashMap<>();
+        switch (code){
+            case Const.SUCCESS:
+                map.put("code",200);
+                map.put("msg","成功查询到借款人信息！");
+                map.put("data",finInfo);
+                return JSONObject.toJSONString(map);
+            case Const.NO_EXIST:
+                map.put("msg","该用户不存在！！");
+                break;
+            case Const.EMPTY:
+                map.put("msg","借款人金融健康信息为空！！");
+                break;
+            case Const.NOT_NECESSARY:
+                map.put("msg","该用户为管理员，无金融健康信息信息！！");
+                break;
+            default:
+                map.put("msg","Error!!");
+        }
+        map.put("code",400);
+        map.put("data","NONE");
+        return JSONObject.toJSONString(map);
+    }
+
+    public static String getRiskResponse(String riskGrade) {
+        Map<String,Object> map = new HashMap<>();
+        if (riskGrade.equals("NONE")){
+            map.put("code",400);
+            map.put("msg","预测失败！！");
+            map.put("index",4);
+        }else {
+            map.put("code",200);
+            map.put("msg",riskGrade);
+            map.put("index",Const.RISK_LIST.indexOf(riskGrade));
+
+        }
+        return JSONObject.toJSONString(map);
     }
 }

@@ -13,7 +13,10 @@ import com.mengxf.riskreport2.pojo.UserPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * UserServiceImpl
@@ -131,6 +134,19 @@ public class UserServiceImpl {
         }
         return Const.NO_EXIST; //查无此人
     }
+
+    public int getAllUsers(List<UserPojo> users){
+        QueryWrapper<UserPojo> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.select("userID","userName","phone","permission");
+        List<UserPojo> res = userDao.selectList(queryWrapper);
+        if (res.size() != 0){
+            res.stream().forEach(user ->user.setPasswprd("******"));//对密码加密显示
+            users.addAll(res);
+            return Const.SUCCESS;
+        }
+        return Const.EMPTY;
+    }
+
 
 
 

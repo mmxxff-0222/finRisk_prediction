@@ -208,7 +208,6 @@ public class ReportServiceImpl {
                 return "NONE";
             }
         }
-
         //对25个特征进行标准化处理
         featuresMap = FeaturesFormat.featuresNormalization(featuresMap);
         // 访问Flask服务端，预测结果 TODO 以下JSON判断写到Utils类中

@@ -7,6 +7,7 @@ import com.mengxf.riskreport2.Utils.Msg;
 import com.mengxf.riskreport2.pojo.BorrowerPojo;
 import com.mengxf.riskreport2.pojo.FinInfoPojo;
 import com.mengxf.riskreport2.pojo.LoanPojo;
+import com.mengxf.riskreport2.pojo.UserPojo;
 import com.mengxf.riskreport2.service.ReportServiceImpl;
 import com.mengxf.riskreport2.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,10 @@ class RiskReport2ApplicationTests {
 
     @Test
     void contextLoads() {
+        List<UserPojo> users = new ArrayList<>();
+        int code = userService.getAllUsers(users);
+        System.out.println(code);
+        System.out.println(users);
 
     }
 
