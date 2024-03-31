@@ -58,6 +58,9 @@ public class ApiResponse {
                 map.put("code",400);
                 map.put("message", "借款人金融健康状况未知！！");
                 break;
+            default:
+                map.put("code",400);
+                map.put("message","报告生成失败！！！");
         }
 
         map.put("data",data);

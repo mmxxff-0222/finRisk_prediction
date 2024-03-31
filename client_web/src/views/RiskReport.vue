@@ -68,9 +68,6 @@
         <!--      头部区域-->
         <el-header style="height: 60px;background-color: AliceBlue;display: flex; align-items:center ">
           <el-breadcrumb style="text-size-adjust: revert" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/homeview' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
           </el-breadcrumb>
 
           <div style="flex:1;width: 0;display: flex;align-items: center;justify-content: flex-end">
@@ -94,11 +91,17 @@
           <div class="block1_rr">
             <div class="group1_rr">
               <el-card class="card1_rr">
-                <el-input
-                    placeholder="请输入查询用户"
-                    v-model="input"
-                    clearable>
-                </el-input>
+                <div style="width: 100%; display: flex; flex-direction: row">
+                  <el-input
+                      placeholder="请输入查询用户"
+                      v-model="input"
+                      clearable>
+                  </el-input>
+                  <el-button style="margin-left: 10px" id="searchInfo_btn" type="primary" icon="el-icon-search"
+                             @click="getInfo" :loading="info_loading" plain>查询信息
+                  </el-button>
+                </div>
+
                 <div
                     style="margin: 10px; height: 120px; display: flex;flex-direction: column;align-items: center; justify-content: center">
                   <img :src="risk_icon" style="width: 100px" alt="">
@@ -144,7 +147,6 @@
                                  align="center"></el-table-column>
               </el-table>
               <div style="margin-top: 20px">
-                <el-button @click="selectRow()">确定选择</el-button>
                 <el-button @click="setCurrent()">取消选择</el-button>
               </div>
             </el-card>
@@ -240,6 +242,7 @@ export default {
       finHealth: '',
       risk_loading: false,
       report_loading: false,
+      info_loading: false,
       okSelect_loading: false,
       user,
       currentRow: null,
@@ -265,20 +268,22 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val;
+      this.loanInfo = ''
+      this.personInfo = ''
+      this.finHealth = ''
+      let name = this.currentRow.userName
+      this.input = name
     },
-    selectRow() {
+    getInfo() {
       let dataComplete = true // 影响 this.requestPermission 的值，进而允许发送请求
       // 向后端发送加载三个表信息的请求
-      if (this.currentRow == null) {
-        this.$notify({
-          title: '警告',
-          message: '未从表格中选择任何信息',
-          type: 'warning'
+      if (this.input == null) {
+        this.$notify.error({
+          title: '错误',
+          message: '输入为空',
         });
       } else {
-        let val = this.currentRow.userName
-        this.input = val
-        console.log(this.input)
+        let val = this.input
         // loanTable
         request.get('/getLoansByName/' + val).then(res => {
           if (res.code === 400) {
@@ -315,23 +320,52 @@ export default {
           console.log(res.data)
           this.finHealth = Array(1).fill(res.data)
         })
-        this.requestPermission = dataComplete
       }
+      this.requestPermission = dataComplete
     },
     doReport() {
-      console.log(this.input)
       this.report_loading = true;
       // 在这里可以执行加载数据或其他操作
       setTimeout(() => {
         // TODO: 向后端发送生成报告请求
+        if (this.input == null) {
+          this.$notify.error({
+            title: "错误",
+            message: "用户名为空！！"
+          })
+        } else {
+          if (this.requestPermission) {
+            request.get('/doReport/' + this.input).then(res => {
+              console.log(res)
+              if (res.code == 200) {
+                this.$notify.success({
+                  title: '生成报告成功',
+                  message: res.data
+                });
+                window.open(res.data)
+              } else {
+                this.$notify.error({
+                  title: '风险报告生成失败',
+                  message: res.data
+                });
+              }
+            })
+
+          } else {
+            this.$notify.error({
+              title: '错误',
+              message: '信息不全，无法生成风险报告'
+            });
+          }
+
+        }
         this.report_loading = false;
-      }, 30000); // 假设加载需要2秒完成
+      }, 2000); // 假设加载需要2秒完成
     },
     getRisk() {
       console.log(this.allUsers)
       this.risk_loading = true;
       // let data =
-
       // 在这里可以执行加载数据或其他操作
       setTimeout(() => {
         console.log('查询风险等级',)
@@ -371,9 +405,13 @@ export default {
           request.post('/getRisk', {"features": postData}).then(res => {
             // res:  {"msg": "低风险 Low Risk","code": 200, "index": 1} index:
             let iconUrl = this.riskIconsList[res.index]
-            this.risk_icon = require('@/assets/pictrues/'+iconUrl)
+            this.risk_icon = require('@/assets/pictrues/' + iconUrl)
             // this.risk_icon = require('@/assets/pictrues/zero_risk.png')
             this.risk_grade = res.msg
+            this.$notify.info({
+              title: '风险等级',
+              message: res.msg
+            });
           })
         } else {
           this.$notify.error({

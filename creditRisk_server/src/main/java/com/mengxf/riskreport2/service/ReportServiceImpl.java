@@ -69,7 +69,7 @@ public class ReportServiceImpl {
 
         /* Create a data-model */
         Map<String,Object> mapData =loadData(name);
-        // TODO  loadFlag 检验异常
+        // loadFlag 检验异常
         int loadFlag = Integer.parseInt(mapData.get("loadFlag").toString());
         response.put("reportCode", loadFlag);
 
@@ -82,12 +82,13 @@ public class ReportServiceImpl {
         String url = "";
         try {
             // 生成报告存放路径及文件名
-            String outPath = Const.OUTPUT_PATH + name + "/" ;
+            String outPath = Const.OUTDOCS_PATH + name + "/" ;
             File pathFile = new File(outPath);
             if(!pathFile.exists()){
                 pathFile.mkdirs();
             }
-            String toFilePath = outPath + name + "'s risk report.docx";
+            String docxName = name + "_risk_report.docx";
+            String toFilePath = outPath + docxName;
             //填充完数据的临时xml文件路径
             String xmlTemp =outPath + "temp.xml";
 
@@ -105,7 +106,7 @@ public class ReportServiceImpl {
             // 4.将doc转化为pdf
 //            asposeWord2Pdf(toFilePath,toFilePath.replace(".docx",".pdf"));
 
-            url = toFilePath;
+            url = Const.SPRING_SERVER + File.separator + "download" + File.separator + name;
         } catch (Exception exception) {
             exception.printStackTrace();
             url = exception.getStackTrace().toString();
