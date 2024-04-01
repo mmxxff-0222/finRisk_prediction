@@ -1,12 +1,4 @@
-* {
-    box-sizing: border-box;
-}
-body{
-    color: aqua;
-    font-size: 14px;
-    margin: 0;
-    padding: 0;
-}
+
 .main_container_rr {
     display: flex;
     flex-direction: column;

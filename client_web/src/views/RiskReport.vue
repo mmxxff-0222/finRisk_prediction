@@ -143,8 +143,7 @@
                 <el-table-column property="userID" label="用户ID" width="120" align="center"></el-table-column>
                 <el-table-column property="userName" label="用户名" align="center"></el-table-column>
                 <el-table-column property="phone" label="手机号" align="center"></el-table-column>
-                <el-table-column property="permission" label="用户权限(1普通用户 0管理员)"
-                                 align="center"></el-table-column>
+                <el-table-column property="permission" label="用户权限(1普通用户 0管理员)" align="center"></el-table-column>
               </el-table>
               <div style="margin-top: 20px">
                 <el-button @click="setCurrent()">取消选择</el-button>
@@ -165,8 +164,7 @@
                   <el-table-column prop="installment" label="每期还款" width="70" align="center"></el-table-column>
                   <el-table-column prop="term" label="贷款期数" width="90" align="center"></el-table-column>
                   <el-table-column prop="grade" label="贷款等级" width="70" align="center"></el-table-column>
-                  <el-table-column prop="application_type" label="申请类型" width="100"
-                                   align="center"></el-table-column>
+                  <el-table-column prop="application_type" label="申请类型" width="100" align="center"></el-table-column>
                   <el-table-column prop="purpose" label="贷款目的" width="140" align="center"></el-table-column>
 
                 </el-table>
@@ -181,8 +179,7 @@
                   <el-table-column prop="emp_length" label="工作年限" width="80" align="center"></el-table-column>
                   <el-table-column prop="addr_state" label="地区" width="50" align="center"></el-table-column>
                   <el-table-column prop="home_ownership" label="住房情况" width="100" align="center"></el-table-column>
-                  <el-table-column prop="verification_status" label="认证状态" width="120"
-                                   align="center"></el-table-column>
+                  <el-table-column prop="verification_status" label="认证状态" width="120" align="center"></el-table-column>
 
                 </el-table>
               </el-card>
@@ -327,7 +324,6 @@ export default {
       this.report_loading = true;
       // 在这里可以执行加载数据或其他操作
       setTimeout(() => {
-        // TODO: 向后端发送生成报告请求
         if (this.input == null) {
           this.$notify.error({
             title: "错误",

@@ -18,7 +18,7 @@ import java.util.Map;
  * @since 2024/3/22 14:16
  */
 public class ApiResponse {
-    public static String okGetString(String msg, Object data){
+    public static String okString(String msg, Object data){
         Map<String,Object> map = new HashMap<>();
         map.put("code", 200);
         map.put("message", msg);
@@ -27,7 +27,7 @@ public class ApiResponse {
         return s;
     }
 
-    public static String okGetString(String msg){
+    public static String okString(String msg){
         Map<String,Object> map = new HashMap<>();
         map.put("code", 200);
         map.put("message", msg);
@@ -80,7 +80,6 @@ public class ApiResponse {
             map.put("data","NONE");
         }
         return JSONObject.toJSONString(map);
-
     }
 
     public static String getLoanResponse(int code, List<LoanPojo> loans) {
@@ -169,6 +168,34 @@ public class ApiResponse {
             map.put("msg",riskGrade);
             map.put("index",Const.RISK_LIST.indexOf(riskGrade));
 
+        }
+        return JSONObject.toJSONString(map);
+    }
+
+    public static String allLoansRespinse(int code, List<LoanPojo> loans) {
+        Map<String, Object> map =new HashMap<>();
+        if (code == Const.SUCCESS){
+            map.put("code",200);
+            map.put("message", "所有用户查询成功！！");
+            map.put("data",loans);
+        }else {
+            map.put("code",400);
+            map.put("message", "用户表为空！！");
+            map.put("data","NONE");
+        }
+        return JSONObject.toJSONString(map);
+    }
+
+    public static String allPersonRespinse(int code, List<BorrowerPojo> persons) {
+        Map<String, Object> map =new HashMap<>();
+        if (code == Const.SUCCESS){
+            map.put("code",200);
+            map.put("message", "所有用户信息查询成功！！");
+            map.put("data",persons);
+        }else {
+            map.put("code",400);
+            map.put("message", "用户信息表为空！！");
+            map.put("data","NONE");
         }
         return JSONObject.toJSONString(map);
     }

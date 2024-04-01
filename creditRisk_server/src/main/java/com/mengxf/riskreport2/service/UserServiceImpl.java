@@ -147,7 +147,24 @@ public class UserServiceImpl {
         return Const.EMPTY;
     }
 
+    public int getAllLoans(List<LoanPojo> loans){
+        QueryWrapper<LoanPojo> queryWrapper = new QueryWrapper<>();
+        List<LoanPojo> res = loanDao.selectList(queryWrapper);
+        if (res.size() != 0){
+            loans.addAll(res);
+            return Const.SUCCESS;
+        }
+        return Const.EMPTY;
+    }
 
 
-
+    public int getAllBorrower(List<BorrowerPojo> persons) {
+        QueryWrapper<BorrowerPojo> queryWrapper = new QueryWrapper<>();
+        List<BorrowerPojo> res = borrowerDao.selectList(queryWrapper);
+        if (res.size() != 0){
+            persons.addAll(res);
+            return Const.SUCCESS;
+        }
+        return Const.EMPTY;
+    }
 }
