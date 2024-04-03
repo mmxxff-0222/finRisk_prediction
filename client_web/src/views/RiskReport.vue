@@ -68,6 +68,8 @@
         <!--      头部区域-->
         <el-header style="height: 60px;background-color: AliceBlue;display: flex; align-items:center ">
           <el-breadcrumb style="text-size-adjust: revert" separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item >风险报告</el-breadcrumb-item>
           </el-breadcrumb>
 
           <div style="flex:1;width: 0;display: flex;align-items: center;justify-content: flex-end">
@@ -191,8 +193,7 @@
                   border
                   style="width: 100%">
                 <el-table-column prop="dti" label="dti" width="70" align="center"></el-table-column>
-                <el-table-column prop="last_pymnt_amnt" label="last_pymnt_amnt" width="120"
-                                 align="center"></el-table-column>
+                <el-table-column prop="last_pymnt_amnt" label="last_pymnt_amnt" width="120" align="center"></el-table-column>
                 <el-table-column prop="open_acc" label="open_acc" width="80" align="center"></el-table-column>
                 <el-table-column prop="pub_rec" label="pub_rec" width="75" align="center"></el-table-column>
                 <el-table-column prop="revol_bal" label="revol_bal" width="75" align="center"></el-table-column>
@@ -200,11 +201,9 @@
                 <el-table-column prop="tot_cur_bal" label="tot_cur_bal" width="90" align="center"></el-table-column>
                 <el-table-column prop="total_acc" label="total_acc" width="75" align="center"></el-table-column>
                 <el-table-column prop="total_pymnt" label="total_pymnt" width="90" align="center"></el-table-column>
-                <el-table-column prop="acc_now_delinq" label="acc_now_delinq" width="115"
-                                 align="center"></el-table-column>
+                <el-table-column prop="acc_now_delinq" label="acc_now_delinq" width="115" align="center"></el-table-column>
                 <el-table-column prop="delinq_2yrs" label="delinq_2yrs" width="90" align="center"></el-table-column>
-                <el-table-column prop="total_rec_late_fee" label="total_rec_late_fee" width="130"
-                                 align="center"></el-table-column>
+                <el-table-column prop="total_rec_late_fee" label="total_rec_late_fee" width="130" align="center"></el-table-column>
                 <el-table-column prop="tot_coll_amt" label="tot_coll_amt" width="100" align="center"></el-table-column>
 
 
@@ -254,6 +253,7 @@ export default {
   mounted() {
     request.get('/getAllUsers').then(res => {
       this.allUsers = res.data
+      console.log('riskReport',this.allUsers)
     })
   },
   methods: {

@@ -68,9 +68,8 @@
         <!--      头部区域-->
         <el-header style="height: 60px;background-color: AliceBlue;display: flex; align-items:center ">
           <el-breadcrumb style="text-size-adjust: revert" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/homeview' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>账号管理</el-breadcrumb-item>
           </el-breadcrumb>
 
           <div style="flex:1;width: 0;display: flex;align-items: center;justify-content: flex-end">
@@ -183,7 +182,7 @@ export default {
       tableData: [], // 表格数据
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页显示条数
-      total:'', // 总记录数
+      total: 20000, // 总记录数
       allUsers: [],
       search:'',
       dialogFormVisible:false,
@@ -197,10 +196,11 @@ export default {
     };
   },
   mounted() {
-    request.get('/getAllUsers').then(res => {
-      this.allUsers = res.data
-      this.total = this.allUsers.length;
-    })
+    // request.get('/getAllUsers').then(res => {
+    //   console.log('all users:',this.allUsers)
+    //   this.allUsers = res.data
+    //   this.total = this.allUsers.length;
+    // })
 
   },
   methods: {
@@ -265,7 +265,6 @@ export default {
     // 加载数据
     loadData() {
       // 模拟从后端获取数据的过程，这里使用 setTimeout 模拟异步请求延迟
-      console.log('total:',this.total)
       setTimeout(() => {
         // 计算起始索引
         const startIndex = (this.currentPage - 1) * this.pageSize;
@@ -277,22 +276,22 @@ export default {
         //   this.tableData = res.data
         // })
         this.tableData = [];
-        // 填充表格数据
-        for (let i = startIndex; i < endIndex; i++) {
-          let user = this.allUsers[i]
-          console.log(user)
-          this.tableData.push({
-            // userID: i + 1,
-            // name: `User ${i + 1}`,
-            // age: Math.floor(Math.random() * 30) + 20 // 随机生成年龄
-            // 添加其他表格列的数据
-            userID: user.userID,
-            userName: user.userName,
-            phone: user.phone,
-            permission: user.permission
-          });
-        }
-      }, 300); // 模拟延迟 300 毫秒
+        request.get('/getUsers/' + startIndex + '-' + endIndex).then(res => {
+          this.allUsers = res.data
+          console.log('all users:',this.allUsers)
+          for (let i = 0; i < this.pageSize; i++) {
+            let user = this.allUsers[i]
+            console.log(user)
+            this.tableData.push({
+              userID: user.userID,
+              userName: user.userName,
+              phone: user.phone,
+              permission: user.permission
+            });
+          }
+        })
+      }, 1000); // 模拟延迟 300 毫秒
+      // 填充表格数据
     }
   },
   created() {

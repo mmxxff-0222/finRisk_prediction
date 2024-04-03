@@ -68,9 +68,8 @@
         <!--      头部区域-->
         <el-header style="height: 60px;background-color: AliceBlue;display: flex; align-items:center ">
           <el-breadcrumb style="text-size-adjust: revert" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/homeview' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>贷款信息</el-breadcrumb-item>
           </el-breadcrumb>
 
           <div style="flex:1;width: 0;display: flex;align-items: center;justify-content: flex-end">
@@ -100,6 +99,7 @@
               <el-table
                   :data="tableData.filter(data => !search || data.loanID.toLowerCase().includes(search.toLowerCase()))"
                   border>
+                <el-table-column prop="userID" label="用户ID" align="center"></el-table-column>
                 <el-table-column prop="loanID" label="贷款ID" align="center"></el-table-column>
                 <el-table-column prop="loan_amnt" label="贷款金额" align="center"></el-table-column>
                 <el-table-column prop="int_rate" label="贷款利率" align="center"></el-table-column>
@@ -336,7 +336,7 @@ export default {
             purpose: loan.purpose
           });
         }
-      }, 300); // 模拟延迟 300 毫秒
+      }, 1000); // 模拟延迟 300 毫秒
     }
   },
   created() {

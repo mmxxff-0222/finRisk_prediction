@@ -68,9 +68,8 @@
         <!--      头部区域-->
         <el-header style="height: 60px;background-color: AliceBlue;display: flex; align-items:center ">
           <el-breadcrumb style="text-size-adjust: revert" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/homeview' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>个人信息</el-breadcrumb-item>
           </el-breadcrumb>
 
           <div style="flex:1;width: 0;display: flex;align-items: center;justify-content: flex-end">
@@ -370,7 +369,7 @@ export default {
             verification_status: person.verification_status
           });
         }
-      }, 300); // 模拟延迟 300 毫秒
+      }, 1000); // 模拟延迟 300 毫秒
     }
   },
   created() {

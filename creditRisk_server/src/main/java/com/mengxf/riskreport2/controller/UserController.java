@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * @author Meng xf
  * @since 2024/3/20 15:42
- *
+ * <p>
  * HTTP请求类型及作用：
  * POST：增
  * DELETE：删
@@ -36,41 +36,49 @@ public class UserController {
     @Autowired
     BasicCURDserviceImpl basicService;
 
-    @RequestMapping(value = "/getAllUsers",method = RequestMethod.GET)
-    public String getAllUsers(){
+    @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
+    public String getAllUsers() {
         List<UserPojo> users = new ArrayList<>();
         int code = userService.getAllUsers(users);
-        return ApiResponse.allUsersRespinse(code,users);
+        return ApiResponse.allUsersRespinse(code, users);
+    }
+    @RequestMapping(value = "/getUsers/{start}-{end}", method = RequestMethod.GET)
+    public String getAllUsersPages(@PathVariable("start") int startIndex,@PathVariable("end") int endIndex) {
+        List<UserPojo> users = new ArrayList<>();
+        String s = String.valueOf(startIndex) + '~' + String.valueOf(endIndex);
+        System.out.println(s);
+        int code = userService.getUsers(users,startIndex,endIndex);
+        return ApiResponse.allUsersRespinse(code, users);
     }
 
-    @RequestMapping(value = "/getLoansByName/{userName}",method = RequestMethod.GET)
-    public String getLoansByName(@PathVariable("userName")String userName){
+    @RequestMapping(value = "/getLoansByName/{userName}", method = RequestMethod.GET)
+    public String getLoansByName(@PathVariable("userName") String userName) {
         List<LoanPojo> loans = new ArrayList<>();
-        int code = userService.findLoanByName(userName,loans);
-        return ApiResponse.getLoanResponse(code,loans);
+        int code = userService.findLoanByName(userName, loans);
+        return ApiResponse.getLoanResponse(code, loans);
     }
 
-    @RequestMapping(value = "/getBorrInfoByName/{userName}",method = RequestMethod.GET)
-    public String getBorrInfoByName(@PathVariable("userName")String userName){
+    @RequestMapping(value = "/getBorrInfoByName/{userName}", method = RequestMethod.GET)
+    public String getBorrInfoByName(@PathVariable("userName") String userName) {
         BorrowerPojo borrInfo = new BorrowerPojo();
-        int code = userService.findBorrowerByName(userName,borrInfo);
-        return ApiResponse.getBorrInfoResponse(code,borrInfo);
+        int code = userService.findBorrowerByName(userName, borrInfo);
+        return ApiResponse.getBorrInfoResponse(code, borrInfo);
     }
 
-    @RequestMapping(value = "/getFinInfoByName/{userName}",method = RequestMethod.GET)
-    public String getFinHealthInfoByName(@PathVariable("userName")String userName){
+    @RequestMapping(value = "/getFinInfoByName/{userName}", method = RequestMethod.GET)
+    public String getFinHealthInfoByName(@PathVariable("userName") String userName) {
         FinInfoPojo finInfo = new FinInfoPojo();
-        int code = userService.findFinHealthByName(userName,finInfo);
-        return ApiResponse.getFinInfoResponse(code,finInfo);
+        int code = userService.findFinHealthByName(userName, finInfo);
+        return ApiResponse.getFinInfoResponse(code, finInfo);
     }
 
-    @RequestMapping(value = "/updateUserById",method = RequestMethod.POST)
-    public String updateUserById(@RequestBody String request){
+    @RequestMapping(value = "/updateUserById", method = RequestMethod.POST)
+    public String updateUserById(@RequestBody String request) {
         // 解析请求
         // 解析请求
         JSONObject obj = JSONObject.parseObject(request);
         JSONObject formData = JSONObject.parseObject(JSONObject.toJSONString(obj.get("form")));
-        basicService.updateUser(Integer.parseInt(formData.get("userID").toString()),formData.get("userName").toString(),formData.get("phone").toString(),Integer.parseInt(formData.get("permissions").toString()));
+        basicService.updateUser(Integer.parseInt(formData.get("userID").toString()), formData.get("userName").toString(), formData.get("phone").toString(), Integer.parseInt(formData.get("permissions").toString()));
         return ApiResponse.okString("success");
     }
 
@@ -83,21 +91,21 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/getAllLoans",method = RequestMethod.GET)
-    public String getAllLoans(){
+    @RequestMapping(value = "/getAllLoans", method = RequestMethod.GET)
+    public String getAllLoans() {
         List<LoanPojo> loans = new ArrayList<>();
         int code = userService.getAllLoans(loans);
-        return ApiResponse.allLoansRespinse(code,loans);
+        return ApiResponse.allLoansRespinse(code, loans);
     }
 
     @DeleteMapping(value = "/deleteLoanByid/{userID}")
-    public String deleteLoanByid(@PathVariable int userID){
+    public String deleteLoanByid(@PathVariable int userID) {
         basicService.deleteLoan(userID);
         return ApiResponse.okString("已删除");
     }
 
     @PutMapping(value = "/updateLoan")
-    public String updateLoan(@RequestBody String request){
+    public String updateLoan(@RequestBody String request) {
         // 解析请求
         JSONObject obj = JSONObject.parseObject(request);
         JSONObject formData = JSONObject.parseObject(JSONObject.toJSONString(obj.get("form")));
@@ -116,21 +124,21 @@ public class UserController {
         return ApiResponse.okString("success");
     }
 
-    @RequestMapping(value = "/getAllPerson",method = RequestMethod.GET)
-    public String getAllPerson(){
+    @RequestMapping(value = "/getAllPerson", method = RequestMethod.GET)
+    public String getAllPerson() {
         List<BorrowerPojo> persons = new ArrayList<>();
         int code = userService.getAllBorrower(persons);
-        return ApiResponse.allPersonRespinse(code,persons);
+        return ApiResponse.allPersonRespinse(code, persons);
     }
 
     @DeleteMapping(value = "/deletePersonByid/{userID}")
-    public String deletePersonByid(@PathVariable int userID){
+    public String deletePersonByid(@PathVariable int userID) {
         basicService.deletePerson(userID);
         return ApiResponse.okString("已删除");
     }
 
     @PutMapping(value = "/updatePerson")
-    public String updatePerson(@RequestBody String request){
+    public String updatePerson(@RequestBody String request) {
         // 解析请求
         JSONObject obj = JSONObject.parseObject(request);
         JSONObject formData = JSONObject.parseObject(JSONObject.toJSONString(obj.get("form")));
@@ -146,11 +154,42 @@ public class UserController {
         return ApiResponse.okString("success");
     }
 
+    @RequestMapping(value = "/getAllFinInfo", method = RequestMethod.GET)
+    public String getAllFinInfo() {
+        List<FinInfoPojo> finInfo = new ArrayList<>();
+        int code = userService.getAllFinInfos(finInfo);
+        return ApiResponse.allFinInfoResponse(code, finInfo);
+    }
 
+    @DeleteMapping(value = "/deleteFinInfoByid/{userID}")
+    public String deleteFinInfoByid(@PathVariable int userID) {
+        basicService.deleteFinInfo(userID);
+        return ApiResponse.okString("已删除");
+    }
 
-
-
-
+    @PutMapping(value = "/updateFininfo")
+    public String updateFininfo(@RequestBody String request) {
+        // 解析请求
+        JSONObject obj = JSONObject.parseObject(request);
+        JSONObject formData = JSONObject.parseObject(JSONObject.toJSONString(obj.get("form")));
+        System.out.println(formData);
+        basicService.updateFinInfo(
+                Integer.parseInt(formData.get("userID").toString()),
+                Float.parseFloat(formData.get("dti").toString()),
+                Float.parseFloat(formData.get("delinq_2yrs").toString()),
+                Float.parseFloat(formData.get("open_acc").toString()),
+                Float.parseFloat(formData.get("pub_rec").toString()),
+                Float.parseFloat(formData.get("acc_now_delinq").toString()),
+                Float.parseFloat(formData.get("tot_coll_amt").toString()),
+                Float.parseFloat(formData.get("tot_cur_bal").toString()),
+                Float.parseFloat(formData.get("revol_bal").toString()),
+                Float.parseFloat(formData.get("revol_util").toString()),
+                Float.parseFloat(formData.get("total_acc").toString()),
+                Float.parseFloat(formData.get("total_pymnt").toString()),
+                Float.parseFloat(formData.get("total_rec_late_fee").toString()),
+                Float.parseFloat(formData.get("last_pymnt_amnt").toString()));
+        return ApiResponse.okString("success");
+    }
 
 
 }

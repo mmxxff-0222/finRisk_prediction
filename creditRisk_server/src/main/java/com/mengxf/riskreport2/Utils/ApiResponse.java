@@ -199,4 +199,18 @@ public class ApiResponse {
         }
         return JSONObject.toJSONString(map);
     }
+
+    public static String allFinInfoResponse(int code, List<FinInfoPojo> finInfo) {
+        Map<String, Object> map =new HashMap<>();
+        if (code == Const.SUCCESS){
+            map.put("code",200);
+            map.put("message", "金融健康信息查询成功！！");
+            map.put("data",finInfo);
+        }else {
+            map.put("code",400);
+            map.put("message", "金融健康信息表为空！！");
+            map.put("data","NONE");
+        }
+        return JSONObject.toJSONString(map);
+    }
 }

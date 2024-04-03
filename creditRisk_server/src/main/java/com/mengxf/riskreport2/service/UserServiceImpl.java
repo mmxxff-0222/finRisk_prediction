@@ -1,6 +1,7 @@
 package com.mengxf.riskreport2.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mengxf.riskreport2.Utils.Const;
 import com.mengxf.riskreport2.dao.BorrowerDao;
 import com.mengxf.riskreport2.dao.FinInfoDao;
@@ -147,6 +148,20 @@ public class UserServiceImpl {
         return Const.EMPTY;
     }
 
+    public int getUsers(List<UserPojo> users,int start, int end){
+//        Page<UserPojo> page = new Page<>(1, 10);
+        QueryWrapper<UserPojo> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.select("userID","userName","phone","permission");
+        List<UserPojo> res = userDao.selectList(queryWrapper).subList(start,end);
+        if (res.size() != 0){
+            System.out.println(res.size());
+            res.stream().forEach(user ->user.setPasswprd("******"));//对密码加密显示
+            users.addAll(res);
+            return Const.SUCCESS;
+        }
+        return Const.EMPTY;
+    }
+
     public int getAllLoans(List<LoanPojo> loans){
         QueryWrapper<LoanPojo> queryWrapper = new QueryWrapper<>();
         List<LoanPojo> res = loanDao.selectList(queryWrapper);
@@ -163,6 +178,16 @@ public class UserServiceImpl {
         List<BorrowerPojo> res = borrowerDao.selectList(queryWrapper);
         if (res.size() != 0){
             persons.addAll(res);
+            return Const.SUCCESS;
+        }
+        return Const.EMPTY;
+    }
+
+    public int getAllFinInfos(List<FinInfoPojo> finInfo) {
+        QueryWrapper<FinInfoPojo> queryWrapper = new QueryWrapper<>();
+        List<FinInfoPojo> res = finInfoDao.selectList(queryWrapper);
+        if (res.size() != 0){
+            finInfo.addAll(res);
             return Const.SUCCESS;
         }
         return Const.EMPTY;
