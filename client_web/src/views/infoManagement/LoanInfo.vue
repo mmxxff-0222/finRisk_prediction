@@ -129,7 +129,7 @@
               </el-table>
               <el-pagination
                   @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
+                  @current-change="handlePageChange"
                   :current-page="currentPage"
                   :page-sizes="[10, 20, 50]"
                   :page-size="pageSize"
@@ -304,7 +304,7 @@ export default {
       this.loadData();
     },
     // 处理当前页码改变
-    handleCurrentChange(page) {
+    handlePageChange(page) {
       this.currentPage = page;
       // 根据当前页码重新加载数据
       this.loadData();

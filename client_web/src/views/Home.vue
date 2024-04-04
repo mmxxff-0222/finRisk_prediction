@@ -109,6 +109,8 @@
 
 </style>
 <script>
+import request from "@/utils/request";
+
 export default {
   data() {
     let user = "admin";
@@ -121,6 +123,9 @@ export default {
       tableData: Array(20).fill(item),
       user
     }
+  },
+  mounted() {
+
   },
   methods: {
     handleFull() {

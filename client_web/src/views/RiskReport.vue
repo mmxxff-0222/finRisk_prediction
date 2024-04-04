@@ -247,7 +247,8 @@ export default {
       risk_icon,
       allUsers: '',
       requestPermission: false,
-      riskIconsList
+      riskIconsList,
+      search:''
     }
   },
   mounted() {

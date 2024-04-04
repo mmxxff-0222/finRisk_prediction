@@ -41,5 +41,11 @@ public class Const {
     // 其他
     public static final String SPRING_SERVER = "http://127.0.0.1:8888";
 
+    // 数据库
+    public static final String BORROWER_TABLE = "borrower";
+    public static final String FININFO_TABLE = "financial_health";
+    public static final String LOAN_TABLE = "loan";
+    public static final String USER_TABLE = "user";
+
 }
 

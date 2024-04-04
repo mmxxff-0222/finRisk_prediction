@@ -158,6 +158,7 @@
 </style>
 <script>
 import * as echarts from 'echarts';
+import request from "@/utils/request";
 
 export default {
   data() {
@@ -174,23 +175,36 @@ export default {
     }
   },
   mounted() {
-    this.loadChart1()
-    this.loadChart2()
-    this.loadChart3()
-    this.loadChart4()
-
-
-
+    request.get('/getChart1Data').then(res =>{
+      this.loadChart1(res.data)
+    })
+    request.get('/getChart2Data').then(res  =>{
+      console.log("chart2:  ")
+      var labels = []
+      var values = []
+      res.data.forEach(item =>{
+        labels.push(item.name)
+        values.push(item.value)
+      })
+      console.log(labels)
+      console.log(values)
+      this.loadChart2(labels,values)
+    })
+    request.get('/getChart3Data').then(res =>{
+      this.loadChart3(res.data)
+    })
+    request.get('/getChart4Data').then(res  =>{
+      this.loadChart4(res.data)
+    })
   },
   methods: {
     handleFull() {
       document.documentElement.requestFullscreen()
     },
-    loadChart1(){
+    loadChart1(chartData){
       var chartDom = document.getElementById('chart1');
       var myChart = echarts.init(chartDom);
       var option;
-
       myChart.showLoading();
       var usaJson = {"type":"FeatureCollection","features":[
           {"type":"Feature","id":"01","properties":{"name":"Alabama"},"geometry":{"type":"Polygon","coordinates":[[[-87.359296,35.00118],[-85.606675,34.984749],[-85.431413,34.124869],[-85.184951,32.859696],[-85.069935,32.580372],[-84.960397,32.421541],[-85.004212,32.322956],[-84.889196,32.262709],[-85.058981,32.13674],[-85.053504,32.01077],[-85.141136,31.840985],[-85.042551,31.539753],[-85.113751,31.27686],[-85.004212,31.003013],[-85.497137,30.997536],[-87.600282,30.997536],[-87.633143,30.86609],[-87.408589,30.674397],[-87.446927,30.510088],[-87.37025,30.427934],[-87.518128,30.280057],[-87.655051,30.247195],[-87.90699,30.411504],[-87.934375,30.657966],[-88.011052,30.685351],[-88.10416,30.499135],[-88.137022,30.318396],[-88.394438,30.367688],[-88.471115,31.895754],[-88.241084,33.796253],[-88.098683,34.891641],[-88.202745,34.995703],[-87.359296,35.00118]]]}},
@@ -278,8 +292,8 @@ export default {
         },
         visualMap: {
           left: 'right',
-          min: 500000,
-          max: 38000000,
+          min: 5,
+          max: 3000,
           inRange: {
             color: [
               '#313695',
@@ -319,68 +333,17 @@ export default {
                 show: true
               }
             },
-            data: [
-              { name: 'Alabama', value: 4822023 },
-              { name: 'Alaska', value: 731449 },
-              { name: 'Arizona', value: 6553255 },
-              { name: 'Arkansas', value: 2949131 },
-              { name: 'California', value: 38041430 },
-              { name: 'Colorado', value: 5187582 },
-              { name: 'Connecticut', value: 3590347 },
-              { name: 'Delaware', value: 917092 },
-              { name: 'District of Columbia', value: 632323 },
-              { name: 'Florida', value: 19317568 },
-              { name: 'Georgia', value: 9919945 },
-              { name: 'Hawaii', value: 1392313 },
-              { name: 'Idaho', value: 1595728 },
-              { name: 'Illinois', value: 12875255 },
-              { name: 'Indiana', value: 6537334 },
-              { name: 'Iowa', value: 3074186 },
-              { name: 'Kansas', value: 2885905 },
-              { name: 'Kentucky', value: 4380415 },
-              { name: 'Louisiana', value: 4601893 },
-              { name: 'Maine', value: 1329192 },
-              { name: 'Maryland', value: 5884563 },
-              { name: 'Massachusetts', value: 6646144 },
-              { name: 'Michigan', value: 9883360 },
-              { name: 'Minnesota', value: 5379139 },
-              { name: 'Mississippi', value: 2984926 },
-              { name: 'Missouri', value: 6021988 },
-              { name: 'Montana', value: 1005141 },
-              { name: 'Nebraska', value: 1855525 },
-              { name: 'Nevada', value: 2758931 },
-              { name: 'New Hampshire', value: 1320718 },
-              { name: 'New Jersey', value: 8864590 },
-              { name: 'New Mexico', value: 2085538 },
-              { name: 'New York', value: 19570261 },
-              { name: 'North Carolina', value: 9752073 },
-              { name: 'North Dakota', value: 699628 },
-              { name: 'Ohio', value: 11544225 },
-              { name: 'Oklahoma', value: 3814820 },
-              { name: 'Oregon', value: 3899353 },
-              { name: 'Pennsylvania', value: 12763536 },
-              { name: 'Rhode Island', value: 1050292 },
-              { name: 'South Carolina', value: 4723723 },
-              { name: 'South Dakota', value: 833354 },
-              { name: 'Tennessee', value: 6456243 },
-              { name: 'Texas', value: 26059203 },
-              { name: 'Utah', value: 2855287 },
-              { name: 'Vermont', value: 626011 },
-              { name: 'Virginia', value: 8185867 },
-              { name: 'Washington', value: 6897012 },
-              { name: 'West Virginia', value: 1855413 },
-              { name: 'Wisconsin', value: 5726398 },
-              { name: 'Wyoming', value: 576412 },
-              { name: 'Puerto Rico', value: 3667084 }
-            ]
+            data: chartData
           }
         ],
       };
+      // option.series.data = data;
+      console.log(option.series.data)
       myChart.setOption(option);
       option && myChart.setOption(option);
 
     },
-    loadChart2(){
+    loadChart2(labels,values){
       var chartDom = document.getElementById('chart2');
       var myChart = echarts.init(chartDom);
       var option;
@@ -406,7 +369,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: [1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 29000, 31000, 33000, 35000],
+            data: labels,
             axisTick: {
               alignWithLabel: true
             }
@@ -422,7 +385,7 @@ export default {
             name: 'Direct',
             type: 'bar',
             barWidth: '60%',
-            data: [10864, 34241, 68644, 67407, 94321, 80433, 40765, 85922, 43366, 62460, 28339, 34075, 31359, 22634, 22623, 6423, 4948, 35124]
+            data: values
           }
         ]
       };
@@ -431,7 +394,7 @@ export default {
 
 
     },
-    loadChart3(){
+    loadChart3(chartData){
       // 半环形图
       var chartDom = document.getElementById('chart3');
       var myChart = echarts.init(chartDom);
@@ -458,19 +421,13 @@ export default {
             // adjust the start and end angle
             startAngle: 180,
             endAngle: 360,
-            data: [
-              { value: 1048, name: 'Search Engine' },
-              { value: 735, name: 'Direct' },
-              { value: 580, name: 'Email' },
-              { value: 484, name: 'Union Ads' },
-              { value: 300, name: 'Video Ads' }
-            ]
+            data: chartData
           }
         ]
       };
       option && myChart.setOption(option);
     },
-    loadChart4(){
+    loadChart4(chartData){
       var chartDom = document.getElementById('chart4');
       var myChart = echarts.init(chartDom);
       var option;
@@ -498,22 +455,7 @@ export default {
             name: 'Access From',
             type: 'pie',
             radius: '50%',
-            data: [
-              { value: 465406, name: 'debt_consolidation' },
-              { value: 184601, name: 'credit_card' },
-              { value: 43731, name: 'home_improvement' },
-              { value: 34145, name: 'other' },
-              { value: 13348, name: 'major_purchase' },
-              { value: 7241, name: 'small_business' },
-              { value: 6891, name: 'medical' },
-              { value: 6320, name: 'car' },
-              { value: 4270, name: 'moving' },
-              { value: 3840, name: 'vacation' },
-              { value: 2883, name: 'house' },
-              { value: 861, name: 'wedding' },
-              { value: 410, name: 'renewable_energy' },
-              { value: 1, name: 'educational' }
-            ],
+            data: chartData,
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,

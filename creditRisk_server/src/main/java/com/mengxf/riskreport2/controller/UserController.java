@@ -42,12 +42,10 @@ public class UserController {
         int code = userService.getAllUsers(users);
         return ApiResponse.allUsersRespinse(code, users);
     }
-    @RequestMapping(value = "/getUsers/{start}-{end}", method = RequestMethod.GET)
-    public String getAllUsersPages(@PathVariable("start") int startIndex,@PathVariable("end") int endIndex) {
+    @RequestMapping(value = "/getUsers/{current}-{size}", method = RequestMethod.GET)
+    public String getAllUsersPages(@PathVariable("current") int current,@PathVariable("size") int size) {
         List<UserPojo> users = new ArrayList<>();
-        String s = String.valueOf(startIndex) + '~' + String.valueOf(endIndex);
-        System.out.println(s);
-        int code = userService.getUsers(users,startIndex,endIndex);
+        int code = userService.getUsers(users,current,size);
         return ApiResponse.allUsersRespinse(code, users);
     }
 
@@ -190,6 +188,13 @@ public class UserController {
                 Float.parseFloat(formData.get("last_pymnt_amnt").toString()));
         return ApiResponse.okString("success");
     }
+
+    @RequestMapping(value = "/getCount/{table}", method = RequestMethod.GET)
+    public String getCount(@PathVariable(value = "table") String tableName) {
+        long nums = userService.getTableCounts(tableName);
+        return ApiResponse.okString("查询数据条数成功！",nums);
+    }
+
 
 
 }

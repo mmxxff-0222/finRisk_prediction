@@ -8,6 +8,7 @@ import com.mengxf.riskreport2.pojo.BorrowerPojo;
 import com.mengxf.riskreport2.pojo.FinInfoPojo;
 import com.mengxf.riskreport2.pojo.LoanPojo;
 import com.mengxf.riskreport2.pojo.UserPojo;
+import com.mengxf.riskreport2.service.ChartServiceImpl;
 import com.mengxf.riskreport2.service.ReportServiceImpl;
 import com.mengxf.riskreport2.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -28,14 +29,16 @@ class RiskReport2ApplicationTests {
     UserServiceImpl userService;
     @Autowired
     ReportServiceImpl reportService;
+    @Autowired
+    ChartServiceImpl chartService;
 
 
     @Test
     void contextLoads() {
-        List<UserPojo> users = new ArrayList<>();
-        int code = userService.getAllUsers(users);
-        System.out.println(code);
-        System.out.println(users);
+        List<Map<String, Object>> chart = chartService.getChart2();
+        for (Map<String, Object> map : chart){
+            System.out.println(map);
+        }
 
     }
 

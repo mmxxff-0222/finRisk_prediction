@@ -148,14 +148,12 @@ public class UserServiceImpl {
         return Const.EMPTY;
     }
 
-    public int getUsers(List<UserPojo> users,int start, int end){
-//        Page<UserPojo> page = new Page<>(1, 10);
-        QueryWrapper<UserPojo> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.select("userID","userName","phone","permission");
-        List<UserPojo> res = userDao.selectList(queryWrapper).subList(start,end);
+    public int getUsers(List<UserPojo> users,int current, int size){
+        Page<UserPojo> page = new Page<>(current,size);
+        List<UserPojo> res = userDao.selectPage(page,null).getRecords();
         if (res.size() != 0){
             System.out.println(res.size());
-            res.stream().forEach(user ->user.setPasswprd("******"));//对密码加密显示
+            res.stream().forEach(user ->user.setPasswprd("******"));//对密码加密
             users.addAll(res);
             return Const.SUCCESS;
         }
@@ -191,5 +189,25 @@ public class UserServiceImpl {
             return Const.SUCCESS;
         }
         return Const.EMPTY;
+    }
+
+    public long getTableCounts(String tableName) {
+        long len = 0;
+        switch (tableName){
+            case Const.BORROWER_TABLE:
+                len = borrowerDao.selectCount(null);
+                return len;
+            case Const.USER_TABLE:
+                len = userDao.selectCount(null);
+                return len;
+            case Const.FININFO_TABLE:
+                len = finInfoDao.selectCount(null);
+                return len;
+            case Const.LOAN_TABLE:
+                len = loanDao.selectCount(null);
+                return len;
+            default:
+                return 0;
+        }
     }
 }

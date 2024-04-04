@@ -23,8 +23,7 @@ public class ApiResponse {
         map.put("code", 200);
         map.put("message", msg);
         map.put("data",data);
-        String s = JSONObject.toJSONString(map);
-        return s;
+        return JSONObject.toJSONString(map);
     }
 
     public static String okString(String msg){

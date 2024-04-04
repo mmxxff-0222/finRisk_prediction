@@ -182,7 +182,7 @@ export default {
       tableData: [], // 表格数据
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页显示条数
-      total: 20000, // 总记录数
+      total: 10000, // 总记录数
       allUsers: [],
       search:'',
       dialogFormVisible:false,
@@ -196,11 +196,10 @@ export default {
     };
   },
   mounted() {
-    // request.get('/getAllUsers').then(res => {
-    //   console.log('all users:',this.allUsers)
-    //   this.allUsers = res.data
-    //   this.total = this.allUsers.length;
-    // })
+    request.get('/getCount/user').then(res => {
+      this.total = res.data
+      console.log(this.total)
+    })
 
   },
   methods: {
@@ -266,17 +265,9 @@ export default {
     loadData() {
       // 模拟从后端获取数据的过程，这里使用 setTimeout 模拟异步请求延迟
       setTimeout(() => {
-        // 计算起始索引
-        const startIndex = (this.currentPage - 1) * this.pageSize;
-        // 计算结束索引
-        const endIndex = Math.min(startIndex + this.pageSize, this.total);
-        console.log(startIndex,'~',endIndex)
         // 清空表格数据
-        // request.get('/getAllUsers').then(res => {
-        //   this.tableData = res.data
-        // })
         this.tableData = [];
-        request.get('/getUsers/' + startIndex + '-' + endIndex).then(res => {
+        request.get('/getUsers/' + this.currentPage + '-' + this.pageSize).then(res => {
           this.allUsers = res.data
           console.log('all users:',this.allUsers)
           for (let i = 0; i < this.pageSize; i++) {
