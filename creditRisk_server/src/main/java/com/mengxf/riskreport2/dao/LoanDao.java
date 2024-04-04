@@ -3,6 +3,7 @@ package com.mengxf.riskreport2.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mengxf.riskreport2.pojo.LoanPojo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * LoanDao
@@ -12,4 +13,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface LoanDao extends BaseMapper<LoanPojo> {
+
 }
