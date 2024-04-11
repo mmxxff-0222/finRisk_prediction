@@ -5,7 +5,7 @@
 }
 
 .block1_rr {
-    flex: 5;
+    flex: 1;
     display: flex;
     flex-direction: row;
 }
@@ -40,7 +40,7 @@
 
 
 .block2_rr {
-    flex: 4;
+    flex: 1;
     display: flex;
     flex-direction: column;
 }

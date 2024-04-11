@@ -53,7 +53,6 @@ public class UserController {
     public String getLoansByName(@PathVariable("userName") String userName) {
         List<LoanPojo> loans = new ArrayList<>();
         int code = userService.findLoanByName(userName, loans);
-        System.out.println(ApiResponse.getLoanResponse(code, loans));
         return ApiResponse.getLoanResponse(code, loans);
     }
 
