@@ -103,40 +103,49 @@
                              @click="getInfo" :loading="info_loading" plain>查询信息
                   </el-button>
                 </div>
+                <div style="width: 100%; display: flex; flex-direction: row">
+                  <div style="flex: 2">
+                    <div
+                        style="margin-top: 10px; height: 120px; display: flex;flex-direction: column;align-items: center; justify-content: center">
+                      <img :src="risk_icon" style="width: 100px" alt="">
+                      <span>{{ risk_grade }}</span>
+                    </div>
+                    <div style="margin: 10px; display: flex; justify-content: center">
+                      <el-button
+                          id="doReport_btn"
+                          style="width: 120px"
+                          type="primary"
+                          icon="el-icon-edit"
+                          @click="doReport"
+                          :loading="report_loading"
+                          round>生成风险报告
+                      </el-button>
+                      <el-button id="getRisk_btn"
+                                 style="width: 120px"
+                                 type="primary"
+                                 icon="el-icon-warning"
+                                 @click="getRisk"
+                                 :loading="risk_loading"
+                                 round>查询风险等级
+                      </el-button>
 
-                <div
-                    style="margin: 10px; height: 120px; display: flex;flex-direction: column;align-items: center; justify-content: center">
-                  <img :src="risk_icon" style="width: 100px" alt="">
-                  <span>{{ risk_grade }}</span>
-                </div>
-                <div style="margin: 10px; display: flex; justify-content: center">
-                  <el-button
-                      id="doReport_btn"
-                      style="width: 120px"
-                      type="primary"
-                      icon="el-icon-edit"
-                      @click="doReport"
-                      :loading="report_loading"
-                      round>生成风险报告
-                  </el-button>
-                  <el-button id="getRisk_btn"
-                             style="width: 120px"
-                             type="primary"
-                             icon="el-icon-warning"
-                             @click="getRisk"
-                             :loading="risk_loading"
-                             round>查询风险等级
-                  </el-button>
-                </div>
+                    </div>
+                  </div>
+                  <div style="flex: 1">
+                    <el-button style="margin-top: 10px" @click="setCurrent()">取消</el-button>
+                  </div>
 
+                </div>
               </el-card>
-              <el-card class="card2_rr"></el-card>
+              <el-card class="card2_rr">
+                <span>爬虫信息展示</span>
+              </el-card>
             </div>
             <el-card class="card3_rr">
               <el-table
                   id="allUserTable_rr"
                   ref="singleTable"
-                  :data="allUsers"
+                  :data="tableData"
                   max-height="300"
                   highlight-current-row
                   @current-change="handleCurrentChange"
@@ -147,8 +156,17 @@
                 <el-table-column property="phone" label="手机号" align="center"></el-table-column>
                 <el-table-column property="permission" label="用户权限(1普通用户 0管理员)" align="center"></el-table-column>
               </el-table>
-              <div style="margin-top: 20px">
-                <el-button @click="setCurrent()">取消选择</el-button>
+              <div style="margin-top: 20px;">
+                <el-pagination
+                    align="center"
+                    @size-change="handleSizeChange"
+                    @current-change="handlePageChange"
+                    :current-page="currentPage"
+                    :page-sizes="[10, 20, 50]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
               </div>
             </el-card>
           </div>
@@ -245,17 +263,22 @@ export default {
       input: '',
       risk_grade: '暂无查询',
       risk_icon,
-      allUsers: '',
       requestPermission: false,
       riskIconsList,
-      search:''
+      tableData: [], // 表格数据
+      currentPage: 1, // 当前页码
+      pageSize: 6, // 每页显示条数
+      total: 10000, // 总记录数
+      allUsers: [],
+      search:'',
     }
   },
   mounted() {
-    request.get('/getAllUsers').then(res => {
-      this.allUsers = res.data
-      console.log('riskReport',this.allUsers)
+    request.get('/getCount/user').then(res => {
+      this.total = res.data
+      this.loadData()
     })
+
   },
   methods: {
     handleFull() {
@@ -263,6 +286,7 @@ export default {
     },
     setCurrent(row) {
       this.$refs.singleTable.setCurrentRow(row);
+      this.input = ''
     },
     handleCurrentChange(val) {
       this.currentRow = val;
@@ -272,24 +296,42 @@ export default {
       let name = this.currentRow.userName
       this.input = name
     },
+    // 处理每页显示条数改变
+    handleSizeChange(size) {
+      this.pageSize = size;
+      // 根据每页显示条数重新加载数据
+      this.loadData();
+    },
+    // 处理当前页码改变
+    handlePageChange(page) {
+      this.currentPage = page;
+      // 根据当前页码重新加载数据
+      this.loadData();
+    },
     getInfo() {
       let dataComplete = true // 影响 this.requestPermission 的值，进而允许发送请求
+      console.log("getInfo:")
+      console.log(this.input)
       // 向后端发送加载三个表信息的请求
-      if (this.input == null) {
+      if (this.input.length < 4) {
         this.$notify.error({
           title: '错误',
-          message: '输入为空',
+          message: '用户名输入有误！！',
         });
       } else {
+        console.log("this.input 不为空")
+        let wrongMsg = '';
+        let successFlag = true;
+        console.log("successFlag 1")
+        console.log(successFlag)
         let val = this.input
         // loanTable
         request.get('/getLoansByName/' + val).then(res => {
           if (res.code === 400) {
+            console.log(res)
             dataComplete = false
-            this.$notify.error({
-              title: '错误',
-              message: res.msg
-            });
+            wrongMsg = wrongMsg + '贷款信息：' + res.msg
+            successFlag = false
           }
           this.loanInfo = res.data
         })
@@ -297,10 +339,8 @@ export default {
         request.get('/getBorrInfoByName/' + val).then(res => {
           if (res.code === 400) {
             dataComplete = false
-            this.$notify.error({
-              title: '错误',
-              message: res.msg
-            });
+            wrongMsg = wrongMsg + '\n用户信息：' + res.msg
+            successFlag = false
           }
           this.personInfo = Array(1).fill(res.data)
         })
@@ -310,18 +350,27 @@ export default {
           console.log(res.code)
           if (res.code === 400) {
             dataComplete = false
-            this.$notify.error({
-              title: '错误',
-              message: res.msg
-            });
+            wrongMsg = wrongMsg + '\n金融健康信息：' + res.msg
+            successFlag = false
           }
           console.log(res.data)
           this.finHealth = Array(1).fill(res.data)
-        })
+        }).finally(res => {
+          if (successFlag){
+            this.$notify.success({
+              title: '用户查询成功！'
+            })
+          }else {
+            this.$notify.error({
+              title: '错误',
+              message: wrongMsg
+            });
+          }})
       }
       this.requestPermission = dataComplete
     },
     doReport() {
+      this.getRisk();
       this.report_loading = true;
       // 在这里可以执行加载数据或其他操作
       setTimeout(() => {
@@ -360,7 +409,6 @@ export default {
       }, 2000); // 假设加载需要2秒完成
     },
     getRisk() {
-      console.log(this.allUsers)
       this.risk_loading = true;
       // let data =
       // 在这里可以执行加载数据或其他操作
@@ -419,6 +467,27 @@ export default {
 
         this.risk_loading = false;
       }, 2000); // 假设加载需要2秒完成
+    },
+    // 加载数据
+    loadData() {
+      // 模拟从后端获取数据的过程，这里使用 setTimeout 模拟异步请求延迟
+      setTimeout(() => {
+        // 清空表格数据
+        this.tableData = [];
+        request.get('/getUsers/' + this.currentPage + '-' + this.pageSize).then(res => {
+          this.allUsers = res.data
+          for (let i = 0; i < this.pageSize; i++) {
+            let user = this.allUsers[i]
+            this.tableData.push({
+              userID: user.userID,
+              userName: user.userName,
+              phone: user.phone,
+              permission: user.permission
+            });
+          }
+        })
+      }, 1000); // 模拟延迟 300 毫秒
+      // 填充表格数据
     }
 
   }
